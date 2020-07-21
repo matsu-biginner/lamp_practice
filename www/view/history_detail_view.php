@@ -12,8 +12,8 @@
     <?php include VIEW_PATH . 'templates/messages.php'; ?>
     <div id="history-data">
       <p>注文番号：<?php print(h($history_id));?></p>
-      <p>購入日時：<?php print(h($purchase_date));?></p>
-      <p>合計金額：<?php print(number_format($total_price));?>円</p>
+      <p>購入日時：<?php print(h($history_data['create_datetime']));?></p>
+      <p>合計金額：<?php print(number_format($history_data['total_price']));?>円</p>
     </div>
     <table class="table table-bordered text-center">
       <thead>

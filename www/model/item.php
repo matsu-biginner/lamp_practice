@@ -63,7 +63,7 @@ function get_history($db, $user_id)
   FROM
     histories as h
   INNER JOIN
-    history_dateils as hd
+    history_details as hd
   ON
     h.history_id = hd.history_id
   INNER JOIN
@@ -91,7 +91,7 @@ function get_all_history($db)
   FROM
     histories as h
   INNER JOIN
-    history_dateils as hd
+    history_details as hd
   ON
     h.history_id = hd.history_id
   INNER JOIN
@@ -117,7 +117,7 @@ SELECT
     hd.price * hd.amount as sub_total_price,
     hd.create_datetime
   FROM
-    history_dateils as hd
+    history_details as hd
   INNER JOIN
     items as i
   ON
@@ -143,7 +143,7 @@ function get_all_history_detail($db, $history_id){
     hd.amount,
     hd.price * hd.amount as sub_total_price
   FROM
-    history_dateils as hd
+    history_details as hd
   INNER JOIN
     items as i
   ON
@@ -156,6 +156,55 @@ function get_all_history_detail($db, $history_id){
     h.history_id = ?
   ";
   return fetch_all_query($db, $sql, $params);
+}
+
+function get_history_data($db, $history_id){
+  $params = array($history_id);
+  $sql = "
+  SELECT
+    h.create_datetime,
+    sum(hd.price * hd.amount) as total_price
+  FROM
+    history_details as hd
+  INNER JOIN
+    histories as h
+  ON
+    hd.history_id = h.history_id
+  WHERE
+  hd.history_id = ?
+  GROUP BY
+  hd.history_id
+  ";
+  return fetch_query($db, $sql, $params);
+}
+
+function get_ranking($db){
+  $sql= "
+  SELECT
+    sum(hd.amount) as amount,
+    i.name,
+    i.stock,
+    i.image,
+    i.price,
+    i.item_id
+  FROM
+    histories as h
+  INNER JOIN
+    history_details as hd
+  ON
+    h.history_id = hd.history_id
+  INNER JOIN
+    items as i
+  ON
+    i.item_id = hd.item_id
+  GROUP BY
+    i.item_id
+  ORDER BY
+    SUM(hd.amount) DESC
+  LIMIT
+    3
+  ";
+  return fetch_all_query($db, $sql);
 }
 
 function regist_item($db, $name, $price, $stock, $status, $image){
@@ -268,11 +317,11 @@ function insert_history($db, $user_id){
   return execute_query($db, $sql, $params);
 }
 
-function insert_history_dateils($db, $history_id, $item_id, $amount, $price){
+function insert_history_details($db, $history_id, $item_id, $amount, $price){
   $params = array($history_id, $item_id, $amount, $price);
   $sql = "
   INSERT INTO
-  history_dateils(
+  history_details(
     history_id,
     item_id,
     amount,
