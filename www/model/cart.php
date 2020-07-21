@@ -130,7 +130,7 @@ function purchase_carts($db, $carts){
         set_error($cart['name'] . 'の購入に失敗しました。');
         throw  new Exception($cart['name'] . 'の購入に失敗しました。');
       }
-      if(insert_history_dateils(
+      if(insert_history_details(
         $db,
         $history_id,
         $cart['item_id'],

@@ -20,8 +20,7 @@ $db = get_db_connect();
 $user = get_login_user($db);
 
 $history_id = get_post('history_id');
-$purchase_date = get_post('purchase_date');
-$total_price = get_post('total_price');
+$history_data = get_history_data($db, $history_id);
 $token = get_post('token');
 
 $user = get_login_user($db);

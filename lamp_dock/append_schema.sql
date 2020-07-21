@@ -4,7 +4,7 @@ user_id int NOT NULL,
 create_datetime datetime NOT NULL,
 primary key(history_id));
 
-create table history_dateils
+create table history_details
 (history_dateil_id int AUTO_INCREMENT,
 history_id int NOT NULL,
 item_id int NOT NULL,
